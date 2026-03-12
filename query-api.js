@@ -9,6 +9,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const FORM_ENCODED_ENDPOINTS = ['/elemental/find', '/elemental/entities/properties'];
+
 function loadEnvFile() {
     try {
         const envPath = path.join(__dirname, '.env');
@@ -29,6 +31,22 @@ function loadEnvFile() {
     }
 }
 
+function requiresFormEncoding(endpoint) {
+    return FORM_ENCODED_ENDPOINTS.some((e) => endpoint.startsWith(e));
+}
+
+function buildFormBody(endpoint, params) {
+    const formParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+        if (typeof value === 'object') {
+            formParams.append(key, JSON.stringify(value));
+        } else {
+            formParams.append(key, String(value));
+        }
+    }
+    return formParams.toString();
+}
+
 async function main() {
     loadEnvFile();
 
@@ -42,9 +60,20 @@ Usage:
   node query-api.js <METHOD> <ENDPOINT> [JSON_PARAMS]
 
 Examples:
-  node query-api.js GET /entities/lookup '{"entityName":"Apple","maxResults":5,"includeNames":true}'
-  node query-api.js POST /entities/search '{"queries":[{"queryId":123,"query":"United States"}]}'
-  node query-api.js POST /elemental/find '{"expression":{"type":"is_type","is_type":{"fid":1}},"limit":10}'
+  # Search for entities (JSON body)
+  node query-api.js POST /entities/search '{"queries":[{"queryId":1,"query":"Apple"}],"maxResults":3}'
+
+  # Get entity details
+  node query-api.js GET /entities/00416400910670863867
+
+  # Find entities by expression (auto form-encoded)
+  node query-api.js POST /elemental/find '{"expression":{"type":"is_type","is_type":{"fid":10}},"limit":5}'
+
+  # Find entities with a property value
+  node query-api.js POST /elemental/find '{"expression":{"type":"comparison","comparison":{"operator":"has_value","pid":313}},"limit":10}'
+
+  # Get entity properties (auto form-encoded)
+  node query-api.js POST /elemental/entities/properties '{"eids":["00416400910670863867"],"pids":[8,313]}'
 
 Environment variables (required):
   LOVELACE_BEARER_TOKEN                Bearer token for API auth
@@ -54,6 +83,9 @@ Setup:
   1. Get a dev token from your team
   2. Add LOVELACE_BEARER_TOKEN to your .env file or export in your shell
      (NUXT_PUBLIC_QUERY_SERVER_ADDRESS should already be in your .env from project init)
+
+Note: /elemental/find and /elemental/entities/properties require form-encoded bodies.
+      This tool automatically handles the encoding for these endpoints.
 `);
         process.exit(0);
     }
@@ -90,11 +122,14 @@ Setup:
     const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : '/' + endpoint;
     let url = `${server}${normalizedEndpoint}`;
 
+    const useFormEncoding = requiresFormEncoding(normalizedEndpoint);
     const fetchOptions = {
         method: method.toUpperCase(),
         headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            'Content-Type': useFormEncoding
+                ? 'application/x-www-form-urlencoded'
+                : 'application/json',
             Accept: 'application/json',
         },
     };
@@ -103,7 +138,11 @@ Setup:
         const queryString = new URLSearchParams(params).toString();
         url = `${url}?${queryString}`;
     } else if (method.toUpperCase() !== 'GET' && Object.keys(params).length > 0) {
-        fetchOptions.body = JSON.stringify(params);
+        if (useFormEncoding) {
+            fetchOptions.body = buildFormBody(normalizedEndpoint, params);
+        } else {
+            fetchOptions.body = JSON.stringify(params);
+        }
     }
 
     console.error(`\n📡 ${method.toUpperCase()} ${url}\n`);
