@@ -13,12 +13,6 @@ import { useModuleLoader } from '~/composables/useModuleLoader';
 import { initializeModuleApi } from '~/composables/useModuleApi';
 
 // Import all built-in feature modules
-import eventSender from '~/features/event-sender';
-import eventReceiver from '~/features/event-receiver';
-import moduleDebug from '~/features/module-debug';
-import cesiumGlobe from '~/features/cesium-globe';
-import entityLookup from '~/features/entity-lookup';
-
 export default defineNuxtPlugin(async () => {
     // Initialize the module API first, before any modules load
     initializeModuleApi();
@@ -30,12 +24,6 @@ export default defineNuxtPlugin(async () => {
     // Register all built-in modules immediately
     // This happens before routing, ensuring modules are available for direct navigation
     // Order matters: modules with setup() methods will run in registration order
-    moduleRegistry.register(cesiumGlobe);
-    moduleRegistry.register(eventSender);
-    moduleRegistry.register(eventReceiver);
-    moduleRegistry.register(moduleDebug);
-    moduleRegistry.register(entityLookup);
-
     console.log(
         '[Module Registry Plugin] Registered built-in modules:',
         moduleRegistry.getAllModules().map((m: FeatureModule) => m.id)

@@ -5,8 +5,8 @@
 [Provide a brief high level description of your project. What is it meant to accomplish? Who are the intended users?]
 
 **Created:** 2026-03-12  
-**App ID:** fsi-monitor  
-**Description:** Aether app: FSI Monitor  
+**App ID:** fsi-monitor-yottagraph-mmns  
+**Description:** FSI Monitor  
 **Last updated:** 2026-03-12
 
 ## Configuration
@@ -14,8 +14,8 @@
 | Setting           | Value                                 |
 | ----------------- | ------------------------------------- |
 | Authentication    | Auth0                                 |
-| 3D Globe (Cesium) | Not yet configured                    |
-| Query Server      | https://query.news.sbox.g.lovelace.ai |
+| 3D Globe (Cesium) | Not required                          |
+| Query Server      | https://query.news.prod.g.lovelace.ai |
 
 ## Cross-Cutting Concepts
 

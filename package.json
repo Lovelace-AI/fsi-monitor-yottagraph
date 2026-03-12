@@ -1,8 +1,8 @@
 {
-    "name": "fsi-monitor",
+    "name": "fsi-monitor-yottagraph",
     "productName": "FSI Monitor",
     "version": "2.0.0",
-    "description": "Aether app: FSI Monitor",
+    "description": "FSI Monitor",
     "main": "electron/main.js",
     "scripts": {
         "dev": "nuxt dev",
