@@ -1,0 +1,26 @@
+# Broadchurch project configuration
+# Auto-generated during tenant provisioning.
+
+gcp:
+  project: broadchurch
+  region: us-central1
+  staging_bucket: broadchurch-agent-staging
+
+tenant:
+  project_name: "fsi-monitor"
+  display_name: "FSI Monitor"
+  org_id: "org_IkoaHAJPJQHhGyiI"
+  service_account: "tenant-ikoahajpjqhhgyii@broadchurch.iam.gserviceaccount.com"
+
+gateway:
+  url: "https://broadchurch-portal-194773164895.us-central1.run.app"
+
+query_server:
+  url: "https://query.news.sbox.g.lovelace.ai"
+  audience: "queryserver:api"
+
+auth:
+  client_id: "BYMVqb7mqpQxh9iAF0tO9b0rdIVL2muG"
+  audience: "queryserver:api"
+
+agents: {}
