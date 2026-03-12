@@ -13,6 +13,8 @@ import { useModuleLoader } from '~/composables/useModuleLoader';
 import { initializeModuleApi } from '~/composables/useModuleApi';
 
 // Import all built-in feature modules
+import watchlist from '~/features/watchlist';
+
 export default defineNuxtPlugin(async () => {
     // Initialize the module API first, before any modules load
     initializeModuleApi();
@@ -24,6 +26,8 @@ export default defineNuxtPlugin(async () => {
     // Register all built-in modules immediately
     // This happens before routing, ensuring modules are available for direct navigation
     // Order matters: modules with setup() methods will run in registration order
+    moduleRegistry.register(watchlist);
+
     console.log(
         '[Module Registry Plugin] Registered built-in modules:',
         moduleRegistry.getAllModules().map((m: FeatureModule) => m.id)
