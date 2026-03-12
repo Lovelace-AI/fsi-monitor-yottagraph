@@ -9,11 +9,11 @@ In addition to being displayed in the app, this table is stored in memory for fu
 
 ## Finding 8k events
 
-Some Edgar `document`s have properties `form_8k_item_code` and `form_8k_event`. These are 8-K forms.
+If the `form_type` of `document` is `8-K`, this is an 8-K form. These document should also have a property `filings`, which will return multiple `event` entities. Each of those `event`s should have a `form_8k_item_code` property.
 
 ## Table
 
-For all filings that have a `form_8k_item_code` property, we include them in the table. They are sorted in reverse chronologic order (most recent at the top). The date is given in the format "Nov 11, 2025". The value for the property will be the item ex. "1.01".
+The table includes all 8k events. We take the filing date from the document with the 8k event attached. They are sorted in reverse chronologic order (most recent at the top). The date is given in the format "Nov 11, 2025". The value for the property will be the item ex. "1.01".
 
 ### Item-Event Type-Severity Lookup
 

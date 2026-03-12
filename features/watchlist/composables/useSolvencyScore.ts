@@ -228,9 +228,6 @@ export function useSolvencyScore(companyNeid: Ref<string>) {
             const schema = await api.getSchema();
             const formTypePid = schema.properties.find((p) => p.name === 'form_type')?.pid;
             const filingDatePid = schema.properties.find((p) => p.name === 'filing_date')?.pid;
-            const form8kItemCodePid = schema.properties.find(
-                (p) => p.name === 'form_8k_item_code'
-            )?.pid;
 
             if (!formTypePid || !filingDatePid) {
                 throw new Error('Required schema properties not found');
@@ -238,25 +235,18 @@ export function useSolvencyScore(companyNeid: Ref<string>) {
 
             const filingNeids = supportedFilings.map((f) => f.neid);
             const pidsToFetch = [formTypePid, filingDatePid];
-            if (form8kItemCodePid) pidsToFetch.push(form8kItemCodePid);
 
             const propertyValues = await api.getEntityProperties(filingNeids, pidsToFetch);
 
-            const filingData: Record<
-                string,
-                { formType?: string; date?: Date; itemCode?: string }
-            > = {};
+            const filingData: Record<string, { formType?: string; date?: Date }> = {};
             for (const pv of propertyValues) {
                 if (!filingData[pv.eid]) filingData[pv.eid] = {};
                 if (pv.pid === formTypePid) filingData[pv.eid].formType = String(pv.value);
                 if (pv.pid === filingDatePid) filingData[pv.eid].date = new Date(pv.value);
-                if (form8kItemCodePid && pv.pid === form8kItemCodePid)
-                    filingData[pv.eid].itemCode = String(pv.value);
             }
 
             let lateFilingCount = 0;
             let amendmentCount = 0;
-            let auditorChangeCount = 0;
             let mostRecentFilingDate: Date | null = null;
 
             for (const [, data] of Object.entries(filingData)) {
@@ -276,16 +266,16 @@ export function useSolvencyScore(companyNeid: Ref<string>) {
                     if (formType.endsWith('/A')) {
                         amendmentCount++;
                     }
-
-                    if (data.itemCode === '4.01') {
-                        auditorChangeCount++;
-                    }
                 }
 
                 if (!mostRecentFilingDate || data.date > mostRecentFilingDate) {
                     mostRecentFilingDate = data.date;
                 }
             }
+
+            const auditorChangeCount = all8kEvents.value.filter(
+                (e) => e.item === '4.01' && e.date >= twelveMonthsAgo
+            ).length;
 
             const filingGapDays = mostRecentFilingDate
                 ? Math.floor(

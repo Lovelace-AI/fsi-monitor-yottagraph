@@ -38,6 +38,7 @@ Flavors:
 - organization
 - person
 - document
+- event
 
 #### Properties
 
@@ -59,12 +60,10 @@ Multiple values: These may occur multiple times, and we want to use all values.
 
 ### Edgar data
 
-The `filings` property should typically return multiple results. The value of each one is the NEID of a `document` entity. (Known bug: sometimes the NEID will be "0", in which case we should ignore it.) We should make a single `properties` query for all the document NEIDs for the following properties. THIS SHOULD BE DONE AS A BULK CALL WHENEVER POSSIIBLE, OTHERWISE IT WILL BE VERY SLOW!
+The `filings` property on a company should typically return multiple results. The value of each one is the NEID of a `document` entity. (Known bug: sometimes the NEID will be "0", in which case we should ignore it.) We should make a single `properties` query for all the document NEIDs for the following properties. THIS SHOULD BE DONE AS A BULK CALL WHENEVER POSSIIBLE, OTHERWISE IT WILL BE VERY SLOW!
 
 - filing_date
 - form_type
-- form_8k_event
-- form_8k_item_code
 - us_gaap:assets
 - us_gaap:assets_current
 - us_gaap:cash
@@ -86,6 +85,15 @@ The `filings` property should typically return multiple results. The value of ea
 - us_gaap:stockholders_equity_total
 
 If a document has NO properties, it is Not Supported. Otherwise it is Supported.
+
+#### 8-K Events
+
+Documents with `form_type` = `8-K` are 8-K filings. These documents have a `filings` property that returns NEIDs of `event` entities. Each event entity has the following properties:
+
+- form_8k_item_code
+- form_8k_event
+
+The filing date for an event comes from the parent 8-K document. See `design/feature_8k_events.md` for details on how events are displayed.
 
 #### Edgar Leadership
 

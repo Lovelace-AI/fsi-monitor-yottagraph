@@ -123,44 +123,92 @@ export function use8kEvents(companyNeid: Ref<string>) {
             const supportedFilingNeids = supportedFilings.map((f) => f.neid);
 
             const schema = await api.getSchema();
-            const form8kEventPid = schema.properties.find(
+            const formTypePid = schema.properties.find((p) => p.name === 'form_type')?.pid;
+            const filingsPid = schema.properties.find((p) => p.name === 'filings')?.pid;
+            const filingDatePid = schema.properties.find((p) => p.name === 'filing_date')?.pid;
+            const form8kItemCodePid = schema.properties.find(
                 (p) => p.name === 'form_8k_item_code'
             )?.pid;
-            const filingDatePid = schema.properties.find((p) => p.name === 'filing_date')?.pid;
 
-            if (!form8kEventPid || !filingDatePid) {
+            if (!formTypePid || !filingsPid || !filingDatePid || !form8kItemCodePid) {
                 throw new Error('Required schema properties not found');
             }
 
-            const propertyValues = await api.getEntityProperties(supportedFilingNeids, [
-                form8kEventPid,
+            const docProperties = await api.getEntityProperties(supportedFilingNeids, [
+                formTypePid,
+                filingsPid,
                 filingDatePid,
             ]);
 
-            const valuesByNeid: Record<string, { item?: string; date?: Date }> = {};
-            for (const pv of propertyValues) {
-                if (!valuesByNeid[pv.eid]) {
-                    valuesByNeid[pv.eid] = {};
+            const docData: Record<
+                string,
+                { formType?: string; filingDate?: Date; eventNeids: string[] }
+            > = {};
+            for (const pv of docProperties) {
+                if (!docData[pv.eid]) {
+                    docData[pv.eid] = { eventNeids: [] };
                 }
-                if (pv.pid === form8kEventPid && pv.value) {
-                    valuesByNeid[pv.eid].item = String(pv.value);
+                if (pv.pid === formTypePid && pv.value) {
+                    docData[pv.eid].formType = String(pv.value);
                 }
                 if (pv.pid === filingDatePid && pv.value) {
-                    valuesByNeid[pv.eid].date = new Date(pv.value);
+                    docData[pv.eid].filingDate = new Date(pv.value);
+                }
+                if (pv.pid === filingsPid && pv.value && String(pv.value) !== '0') {
+                    docData[pv.eid].eventNeids.push(String(pv.value));
+                }
+            }
+
+            const form8kDocs = Object.entries(docData).filter(
+                ([, data]) =>
+                    data.formType === '8-K' && data.filingDate && data.eventNeids.length > 0
+            );
+
+            if (form8kDocs.length === 0) {
+                summary.value = {
+                    events: [],
+                    totalCount: 0,
+                    execChangeCount12mo: 0,
+                    governanceEvents: [],
+                };
+                loading.value = false;
+                return;
+            }
+
+            const eventNeidToDocDate: Record<string, Date> = {};
+            const allEventNeids: string[] = [];
+            for (const [, data] of form8kDocs) {
+                for (const eventNeid of data.eventNeids) {
+                    eventNeidToDocDate[eventNeid] = data.filingDate!;
+                    allEventNeids.push(eventNeid);
+                }
+            }
+
+            const eventProperties = await api.getEntityProperties(allEventNeids, [
+                form8kItemCodePid,
+            ]);
+
+            const eventItemCodes: Record<string, string> = {};
+            for (const pv of eventProperties) {
+                if (pv.pid === form8kItemCodePid && pv.value) {
+                    eventItemCodes[pv.eid] = String(pv.value);
                 }
             }
 
             const parsed8kEvents: Form8kEvent[] = [];
 
-            for (const [neid, data] of Object.entries(valuesByNeid)) {
-                if (data.item && data.date) {
-                    const eventType = EVENT_TYPE_LOOKUP[data.item] || 'UNKNOWN';
-                    const severity = SEVERITY_LOOKUP[data.item] || 'low';
+            for (const eventNeid of allEventNeids) {
+                const itemCode = eventItemCodes[eventNeid];
+                const filingDate = eventNeidToDocDate[eventNeid];
+
+                if (itemCode && filingDate) {
+                    const eventType = EVENT_TYPE_LOOKUP[itemCode] || 'UNKNOWN';
+                    const severity = SEVERITY_LOOKUP[itemCode] || 'low';
 
                     parsed8kEvents.push({
-                        neid,
-                        date: data.date,
-                        item: data.item,
+                        neid: eventNeid,
+                        date: filingDate,
+                        item: itemCode,
                         eventType,
                         severity,
                     });
