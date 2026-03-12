@@ -7,7 +7,7 @@ An app to explore information about companies, with a focus on data derived from
 **Created:** 2026-02-25  
 **App ID:** aether-dserp-fsi-mm2h  
 **Description:** A app for exploring DSERP-FSI data  
-**Last updated:** 2026-03-10
+**Last updated:** 2026-03-12
 
 ## Configuration
 
@@ -122,7 +122,7 @@ In the Agent section, we have three buttons:
 
 1. Dialogue -> pops up a box "An interactive agent that lets users query the data with natural language. Coming soon!"
 2. Alerting -> pops up a box "A agent that highlights recent alerts from the watchlist. Coming soon!"
-3. Briefing -> pops up a box "A comprehensive brief of the watchlist data. Coming soon!"
+3. Briefing -> opens the Briefing Agent dialog, which generates a natural language summary (max 100 words) of Edgar filings in the watchlist. Requires the `briefing_agent` to be deployed via `/deploy_agent`.
 
 The Watchlist is a table with many columns (details below).
 

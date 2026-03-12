@@ -40,13 +40,7 @@
                                 <v-btn
                                     variant="outlined"
                                     prepend-icon="mdi-file-document"
-                                    @click="
-                                        openComingSoon(
-                                            'Briefing',
-                                            'mdi-file-document',
-                                            'A comprehensive brief of the watchlist data.'
-                                        )
-                                    "
+                                    @click="showBriefingDialog = true"
                                 >
                                     Briefing
                                 </v-btn>
@@ -246,6 +240,9 @@
                     :icon="comingSoonIcon"
                     :description="comingSoonDescription"
                 />
+
+                <!-- Briefing Agent Dialog -->
+                <BriefingAgentDialog v-model="showBriefingDialog" :watchlist-data="dataCache" />
             </v-col>
         </v-row>
     </v-container>
@@ -256,6 +253,7 @@
     import EdgarCompanyProfileDialog from '../components/EdgarCompanyProfileDialog.vue';
     import ComingSoonDialog from '../components/ComingSoonDialog.vue';
     import SolvencyScoreDialog from '../components/SolvencyScoreDialog.vue';
+    import BriefingAgentDialog from '../components/BriefingAgentDialog.vue';
     import type { SearchMatch } from '../composables/useWatchlistApi';
     import { useCompanyWatchlistData } from '../composables/useCompanyWatchlistData';
 
@@ -269,6 +267,7 @@
     const showSearch = ref(false);
     const showEdgarProfile = ref(false);
     const showSolvencyScore = ref(false);
+    const showBriefingDialog = ref(false);
     const showComingSoonDialog = ref(false);
     const comingSoonTitle = ref('');
     const comingSoonIcon = ref('');
