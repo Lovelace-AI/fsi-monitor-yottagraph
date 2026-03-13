@@ -118,11 +118,15 @@ We also have a Behavior Score. To calculate this, we look only at those behavior
 
 ## Stake Changes
 
-"TODO (Uses 13D/13G info)"
+TODO - this is just a stub for a table.
 
-## Instrument Signals
+Stack Change Score: --
 
-"TODO"
+Columns
+
+1. Date
+2. Change
+3. Severity
 
 # Solvency Score
 

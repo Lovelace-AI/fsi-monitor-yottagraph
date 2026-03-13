@@ -14,7 +14,9 @@
 
 # Feature Overview
 
-A feature box (in the Edgar Company Profile dialog) containing a table of financial facts about a company. Each fact draws from a sequence of fields, where we first look for the first field in the list, and then if it's not present move on to the next field or combination of fields.
+A feature box (in the Edgar Company Profile dialog) containing a table of financial facts about a company. This table draws only from forms 10-K and 10-Q.
+
+Each fact draws from a sequence of fields, where we first look for the first field in the list, and then if it's not present move on to the next field or combination of fields.
 
 Each row in the table applies to a single document. For each document, we try to fill in each column. If we can't (there is no data, or no supported fields), put "—".
 

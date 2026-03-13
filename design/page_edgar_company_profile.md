@@ -16,10 +16,38 @@ Basic company info. Each of these is listed with the property on the left and th
 
 ## Leadership
 
-Company leadership info. See `DESIGN.md` Edgar Leadership section.
+TODO fill in table. This table is just stubbed out for now.
 
-1. Officer count: count number of people with is_officer property on the company.
-1. Director count: count number of people with is_director property on the company.
+Leadership has three sections.
+
+### Officers
+
+Officer count: --
+Table:
+
+1. Title
+2. Name
+3. Appointed
+
+### Directors
+
+Director count: --
+Table:
+
+1. Title
+2. Name
+3. Appointed
+
+### Leadership changes
+
+A table with two columns
+
+1. Date
+2. Change
+
+## Filings
+
+A table listing all the filings for the company. See `design/feature_filings_list.md` for details.
 
 ## Financial Facts
 
