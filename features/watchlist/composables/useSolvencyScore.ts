@@ -58,13 +58,6 @@ function calculateRecencyMultiplier(daysAgo: number): number {
     return Math.max(0.25, 1.0 - (daysAgo / 730) * 0.75);
 }
 
-function calculateLateFilingScore(count: number): { severity: BehaviorSeverity; score: number } {
-    if (count === 0) return { severity: 'low', score: 0 };
-    if (count === 1) return { severity: 'medium', score: 50 };
-    if (count === 2) return { severity: 'high', score: 70 };
-    return { severity: 'critical', score: 85 };
-}
-
 function calculateFilingGapScore(days: number): { severity: BehaviorSeverity; score: number } {
     if (days < 90) return { severity: 'low', score: 0 };
     if (days < 180) return { severity: 'medium', score: 40 };
@@ -245,7 +238,6 @@ export function useSolvencyScore(companyNeid: Ref<string>) {
                 if (pv.pid === filingDatePid) filingData[pv.eid].date = new Date(pv.value);
             }
 
-            let lateFilingCount = 0;
             let amendmentCount = 0;
             let mostRecentFilingDate: Date | null = null;
 
@@ -254,15 +246,6 @@ export function useSolvencyScore(companyNeid: Ref<string>) {
 
                 if (data.date >= twelveMonthsAgo) {
                     const formType = data.formType.toUpperCase();
-                    if (
-                        formType === 'NT 10-K' ||
-                        formType === 'NT 10-Q' ||
-                        formType === 'NT 10-K/A' ||
-                        formType === 'NT 10-Q/A'
-                    ) {
-                        lateFilingCount++;
-                    }
-
                     if (formType.endsWith('/A')) {
                         amendmentCount++;
                     }
@@ -282,15 +265,6 @@ export function useSolvencyScore(companyNeid: Ref<string>) {
                       (now.getTime() - mostRecentFilingDate.getTime()) / (1000 * 60 * 60 * 24)
                   )
                 : 365;
-
-            const lateFilingResult = calculateLateFilingScore(lateFilingCount);
-            signals.push({
-                name: 'Late Filing',
-                rawValue: lateFilingCount,
-                severity: lateFilingResult.severity,
-                score: lateFilingResult.score,
-                weight: 1.2,
-            });
 
             const filingGapResult = calculateFilingGapScore(filingGapDays);
             signals.push({

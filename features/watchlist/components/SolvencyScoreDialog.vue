@@ -202,30 +202,40 @@
                 </v-card>
 
                 <!-- Stake Changes Box (TODO) -->
-                <v-card class="mb-4" variant="outlined">
+                <v-card variant="outlined">
                     <v-card-title class="d-flex align-center pb-1">
                         <v-icon color="purple" size="small" class="mr-2"
                             >mdi-swap-horizontal</v-icon
                         >
                         <span class="text-subtitle-1 font-weight-bold">Stake Changes</span>
+                        <v-spacer />
+                        <v-chip size="small" color="grey-lighten-3" text-color="grey-darken-1">
+                            Score: --
+                        </v-chip>
                     </v-card-title>
                     <v-divider />
-                    <v-card-text class="text-center pa-4">
-                        <v-icon size="32" color="grey-lighten-1" class="mb-2">mdi-wrench</v-icon>
-                        <div class="text-body-2 text-medium-emphasis">TODO (Uses 13D/13G info)</div>
-                    </v-card-text>
-                </v-card>
-
-                <!-- Instrument Signals Box (TODO) -->
-                <v-card variant="outlined">
-                    <v-card-title class="d-flex align-center pb-1">
-                        <v-icon color="teal" size="small" class="mr-2">mdi-chart-line</v-icon>
-                        <span class="text-subtitle-1 font-weight-bold">Instrument Signals</span>
-                    </v-card-title>
-                    <v-divider />
-                    <v-card-text class="text-center pa-4">
-                        <v-icon size="32" color="grey-lighten-1" class="mb-2">mdi-wrench</v-icon>
-                        <div class="text-body-2 text-medium-emphasis">TODO</div>
+                    <v-card-text class="pa-0">
+                        <div class="stake-table-container">
+                            <v-table density="compact" class="stake-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Date</th>
+                                        <th class="text-left">Change</th>
+                                        <th class="text-center">Severity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td
+                                            colspan="3"
+                                            class="text-center text-medium-emphasis pa-4"
+                                        >
+                                            TODO - Uses 13D/13G info
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </v-table>
+                        </div>
                     </v-card-text>
                 </v-card>
             </v-card-text>
@@ -305,21 +315,25 @@
     }
 
     .events-table-container,
-    .signals-table-container {
+    .signals-table-container,
+    .stake-table-container {
         overflow-x: auto;
         max-height: 250px;
         overflow-y: auto;
     }
 
     .events-table,
-    .signals-table {
+    .signals-table,
+    .stake-table {
         font-size: 0.8125rem;
     }
 
     .events-table th,
     .events-table td,
     .signals-table th,
-    .signals-table td {
+    .signals-table td,
+    .stake-table th,
+    .stake-table td {
         padding: 6px 12px !important;
         white-space: nowrap;
     }

@@ -1,8 +1,26 @@
 # Edgar Company Profile
 
+## Implementation Status
+
+- [x] Create `EdgarCompanyProfileDialog` component
+- [x] Implement Company Profile box
+- [x] Implement Leadership box (stubbed with table structure)
+- [x] Implement Filings box
+- [x] Implement Financial Facts box
+- [x] Implement 8-K Events box
+
+## Files
+
+- `features/watchlist/components/EdgarCompanyProfileDialog.vue` - Main dialog component
+- `features/watchlist/components/FilingsListBox.vue` - Filings table component
+- `features/watchlist/components/FinancialFactsBox.vue` - Financial facts table component
+- `features/watchlist/components/Form8kEventsBox.vue` - 8-K events table component
+
+---
+
 This is a pop up page accessed via the Watchlist from the Edgar Filings Column. See `DESIGN.md` for instructions to access the data used to build this page.
 
-The page consistents of 4 boxes, arranged vertically.
+The page consistents of 5 boxes, arranged vertically.
 
 ## Company Profile
 
