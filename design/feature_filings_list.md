@@ -1,6 +1,13 @@
 # Implementation Status
 
+- [x] Create `FilingsListBox` component with table display
+- [x] Update `useCompanyFilings` to include form_type
+- [x] Integrate into `EdgarCompanyProfileDialog.vue`
+
 ## Files
+
+- `features/watchlist/components/FilingsListBox.vue` - Table display component
+- `features/watchlist/composables/useCompanyFilings.ts` - Data fetching (shared)
 
 # Feature Overview
 

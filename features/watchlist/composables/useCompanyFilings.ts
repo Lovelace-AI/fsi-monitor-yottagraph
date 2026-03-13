@@ -3,6 +3,7 @@ import { useWatchlistApi } from './useWatchlistApi';
 export interface SupportedFiling {
     neid: string;
     filingDate: Date;
+    formType: string;
 }
 
 export interface CompanyFilingsData {
@@ -51,8 +52,9 @@ export function useCompanyFilings(companyNeid: Ref<string>) {
             const schema = await api.getSchema();
             const filingsPid = schema.properties.find((p) => p.name === 'filings')?.pid;
             const filingDatePid = schema.properties.find((p) => p.name === 'filing_date')?.pid;
+            const formTypePid = schema.properties.find((p) => p.name === 'form_type')?.pid;
 
-            if (!filingsPid || !filingDatePid) {
+            if (!filingsPid || !filingDatePid || !formTypePid) {
                 throw new Error('Required schema properties not found');
             }
 
@@ -79,13 +81,30 @@ export function useCompanyFilings(companyNeid: Ref<string>) {
             let lastSupportedFilingDate = 'N/A';
 
             if (validNeids.length > 0) {
-                const dateProperties = await api.getEntityProperties(validNeids, [filingDatePid]);
+                const filingProperties = await api.getEntityProperties(validNeids, [
+                    filingDatePid,
+                    formTypePid,
+                ]);
 
-                for (const prop of dateProperties) {
+                const filingDataMap: Record<string, { filingDate?: Date; formType?: string }> = {};
+                for (const prop of filingProperties) {
+                    if (!filingDataMap[prop.eid]) {
+                        filingDataMap[prop.eid] = {};
+                    }
                     if (prop.pid === filingDatePid && prop.value) {
+                        filingDataMap[prop.eid].filingDate = new Date(prop.value);
+                    }
+                    if (prop.pid === formTypePid && prop.value) {
+                        filingDataMap[prop.eid].formType = String(prop.value);
+                    }
+                }
+
+                for (const [neid, filingData] of Object.entries(filingDataMap)) {
+                    if (filingData.filingDate) {
                         supportedFilings.push({
-                            neid: prop.eid,
-                            filingDate: new Date(prop.value),
+                            neid,
+                            filingDate: filingData.filingDate,
+                            formType: filingData.formType || 'Unknown',
                         });
                     }
                 }

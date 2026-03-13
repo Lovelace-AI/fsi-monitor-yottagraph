@@ -7,8 +7,7 @@
 - [x] Implement Financials box with ratios and hover tooltips
 - [x] Implement Distress Events box with table and weighted score
 - [x] Implement Behavior Signals box with table and behavior score
-- [ ] Implement Stake Changes box (uses 13D/13G info)
-- [ ] Implement Instrument Signals box
+- [ ] Implement Stake Changes box (uses 13D/13G info) - currently stubbed
 - [ ] Calculate overall Solvency Score from components
 - [ ] Officer departures detection
 - [ ] Director departures detection
@@ -87,7 +86,6 @@ This box uses much more varied data. The table below shows each kind of behavior
 
 | Behavior Signal     | Detection                                                             | Weight | Time Period |
 | ------------------- | --------------------------------------------------------------------- | ------ | ----------- |
-| Late filing         | form_type IN ('NT 10-K', 'NT 10-Q', 'NT 10-K/A', 'NT 10-Q/A')         | 1.2x   | 12 months   |
 | Filing gap          | days since most recent filing                                         | 1x     | 12 months   |
 | Amendment Frequency | Count of amended filings (forms ending in /A)                         | 0.8x   | 12 months   |
 | Officer departures  | TODO, currently always 0                                              | 1x     | 90 days     |
@@ -100,7 +98,6 @@ In each bucket we have the value that places the behavior signal in that bucket,
 
 | Behavior Signal     | Low     | Medium      | High         | Critical   |
 | ------------------- | ------- | ----------- | ------------ | ---------- |
-| Late filing         | 0 (0)   | 1 (50)      | 2 (70)       | ≥3 (85)    |
 | Filing gap          | <90 (0) | 90-179 (40) | 180-364 (65) | >=365 (90) |
 | Amendment Frequency | <5 (0)  | ≥5 (40)     | N/A          | N/A        |
 | Officer departures  | 0 (0)   | 1 (40)      | 2 (60)       | ≥3 (80)    |
@@ -109,7 +106,7 @@ In each bucket we have the value that places the behavior signal in that bucket,
 
 ### Presentation
 
-A table with each of the 6 behavior signals and their severity level. Columns:
+A table with each of the 5 behavior signals and their severity level. Columns:
 
 1. Behavior signal
 2. Severity
