@@ -147,12 +147,7 @@
                                         <!-- Executive Risk -->
                                         <td
                                             class="text-center clickable-cell"
-                                            @click="
-                                                openComingSoon(
-                                                    'Executive Risk',
-                                                    'mdi-account-alert'
-                                                )
-                                            "
+                                            @click="openExecutiveRisk(company)"
                                         >
                                             --
                                         </td>
@@ -160,9 +155,7 @@
                                         <!-- CIK Velocity -->
                                         <td
                                             class="text-center clickable-cell group-end"
-                                            @click="
-                                                openComingSoon('CIK Velocity', 'mdi-speedometer')
-                                            "
+                                            @click="openCIKVelocity(company)"
                                         >
                                             --
                                         </td>
@@ -170,12 +163,7 @@
                                         <!-- News Mentions -->
                                         <td
                                             class="text-center clickable-cell"
-                                            @click="
-                                                openComingSoon(
-                                                    'News Company Profile',
-                                                    'mdi-newspaper'
-                                                )
-                                            "
+                                            @click="openNewsMentions(company)"
                                         >
                                             <template v-if="getCompanyLoading(company.neid)">
                                                 <v-progress-circular
@@ -192,7 +180,7 @@
                                         <!-- Summary (24H) -->
                                         <td
                                             class="text-center clickable-cell"
-                                            @click="openComingSoon('News Summary', 'mdi-text-box')"
+                                            @click="openNewsSummary(company)"
                                         >
                                             No summary
                                         </td>
@@ -200,12 +188,7 @@
                                         <!-- Sentiment -->
                                         <td
                                             class="text-center clickable-cell"
-                                            @click="
-                                                openComingSoon(
-                                                    'News Sentiment',
-                                                    'mdi-emoticon-outline'
-                                                )
-                                            "
+                                            @click="openNewsSentiment(company)"
                                         >
                                             --
                                         </td>
@@ -233,6 +216,41 @@
                     :company-name="selectedCompanyName"
                 />
 
+                <!-- Executive Risk Dialog -->
+                <ExecutiveRiskDialog
+                    v-model="showExecutiveRisk"
+                    :company-neid="selectedCompanyNeid"
+                    :company-name="selectedCompanyName"
+                />
+
+                <!-- CIK Velocity Dialog -->
+                <CIKVelocityDialog
+                    v-model="showCIKVelocity"
+                    :company-neid="selectedCompanyNeid"
+                    :company-name="selectedCompanyName"
+                />
+
+                <!-- News Mentions Dialog -->
+                <NewsMentionsDialog
+                    v-model="showNewsMentions"
+                    :company-neid="selectedCompanyNeid"
+                    :company-name="selectedCompanyName"
+                />
+
+                <!-- News Summary Dialog -->
+                <NewsSummaryDialog
+                    v-model="showNewsSummary"
+                    :company-neid="selectedCompanyNeid"
+                    :company-name="selectedCompanyName"
+                />
+
+                <!-- News Sentiment Dialog -->
+                <NewsSentimentDialog
+                    v-model="showNewsSentiment"
+                    :company-neid="selectedCompanyNeid"
+                    :company-name="selectedCompanyName"
+                />
+
                 <!-- Coming Soon Dialog -->
                 <ComingSoonDialog
                     v-model="showComingSoonDialog"
@@ -254,6 +272,11 @@
     import ComingSoonDialog from '../components/ComingSoonDialog.vue';
     import SolvencyScoreDialog from '../components/SolvencyScoreDialog.vue';
     import BriefingAgentDialog from '../components/BriefingAgentDialog.vue';
+    import ExecutiveRiskDialog from '../components/ExecutiveRiskDialog.vue';
+    import CIKVelocityDialog from '../components/CIKVelocityDialog.vue';
+    import NewsMentionsDialog from '../components/NewsMentionsDialog.vue';
+    import NewsSummaryDialog from '../components/NewsSummaryDialog.vue';
+    import NewsSentimentDialog from '../components/NewsSentimentDialog.vue';
     import type { SearchMatch } from '../composables/useWatchlistApi';
     import { useCompanyWatchlistData } from '../composables/useCompanyWatchlistData';
 
@@ -269,6 +292,11 @@
     const showSolvencyScore = ref(false);
     const showBriefingDialog = ref(false);
     const showComingSoonDialog = ref(false);
+    const showExecutiveRisk = ref(false);
+    const showCIKVelocity = ref(false);
+    const showNewsMentions = ref(false);
+    const showNewsSummary = ref(false);
+    const showNewsSentiment = ref(false);
     const comingSoonTitle = ref('');
     const comingSoonIcon = ref('');
     const comingSoonDescription = ref('');
@@ -357,6 +385,36 @@
         selectedCompanyNeid.value = company.neid;
         selectedCompanyName.value = company.name;
         showSolvencyScore.value = true;
+    }
+
+    function openExecutiveRisk(company: WatchlistEntry) {
+        selectedCompanyNeid.value = company.neid;
+        selectedCompanyName.value = company.name;
+        showExecutiveRisk.value = true;
+    }
+
+    function openCIKVelocity(company: WatchlistEntry) {
+        selectedCompanyNeid.value = company.neid;
+        selectedCompanyName.value = company.name;
+        showCIKVelocity.value = true;
+    }
+
+    function openNewsMentions(company: WatchlistEntry) {
+        selectedCompanyNeid.value = company.neid;
+        selectedCompanyName.value = company.name;
+        showNewsMentions.value = true;
+    }
+
+    function openNewsSummary(company: WatchlistEntry) {
+        selectedCompanyNeid.value = company.neid;
+        selectedCompanyName.value = company.name;
+        showNewsSummary.value = true;
+    }
+
+    function openNewsSentiment(company: WatchlistEntry) {
+        selectedCompanyNeid.value = company.neid;
+        selectedCompanyName.value = company.name;
+        showNewsSentiment.value = true;
     }
 
     function openComingSoon(title: string, icon: string, description?: string) {

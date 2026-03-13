@@ -53,21 +53,101 @@
                             <v-progress-circular indeterminate size="24" />
                         </div>
                         <div v-else>
-                            <div class="d-flex justify-space-between align-center py-1">
-                                <span class="text-body-2 text-medium-emphasis">Officer Count</span>
-                                <span class="text-body-2 font-weight-medium">{{
-                                    officerCount
-                                }}</span>
+                            <!-- Officers Section -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-space-between align-center py-1">
+                                    <span class="text-body-2 font-weight-bold">Officers</span>
+                                    <span class="text-body-2 text-medium-emphasis"
+                                        >Count: {{ officerCount }}</span
+                                    >
+                                </div>
+                                <v-table density="compact" class="leadership-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Title</th>
+                                            <th class="text-left">Name</th>
+                                            <th class="text-left">Appointed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td
+                                                colspan="3"
+                                                class="text-center text-medium-emphasis"
+                                            >
+                                                Table data coming soon
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </v-table>
                             </div>
-                            <div class="d-flex justify-space-between align-center py-1">
-                                <span class="text-body-2 text-medium-emphasis">Director Count</span>
-                                <span class="text-body-2 font-weight-medium">{{
-                                    directorCount
-                                }}</span>
+
+                            <!-- Directors Section -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-space-between align-center py-1">
+                                    <span class="text-body-2 font-weight-bold">Directors</span>
+                                    <span class="text-body-2 text-medium-emphasis"
+                                        >Count: {{ directorCount }}</span
+                                    >
+                                </div>
+                                <v-table density="compact" class="leadership-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Title</th>
+                                            <th class="text-left">Name</th>
+                                            <th class="text-left">Appointed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td
+                                                colspan="3"
+                                                class="text-center text-medium-emphasis"
+                                            >
+                                                Table data coming soon
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </v-table>
+                            </div>
+
+                            <!-- Leadership Changes Section -->
+                            <div>
+                                <div class="d-flex align-center py-1">
+                                    <span class="text-body-2 font-weight-bold"
+                                        >Leadership Changes</span
+                                    >
+                                </div>
+                                <v-table density="compact" class="leadership-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Date</th>
+                                            <th class="text-left">Change</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td
+                                                colspan="2"
+                                                class="text-center text-medium-emphasis"
+                                            >
+                                                Table data coming soon
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </v-table>
                             </div>
                         </div>
                     </v-card-text>
                 </v-card>
+
+                <!-- Filings Box -->
+                <FilingsBox
+                    :loading="filingsLoading"
+                    :error="filingsError"
+                    :filings="filingsForBox"
+                    class="mb-4"
+                />
 
                 <!-- Financial Facts Box -->
                 <FinancialFactsBox
@@ -96,6 +176,7 @@
     import { use8kEvents } from '../composables/use8kEvents';
     import FinancialFactsBox from './FinancialFactsBox.vue';
     import Form8kEventsBox from './Form8kEventsBox.vue';
+    import FilingsBox, { type FilingEntry } from './FilingsBox.vue';
 
     const props = defineProps<{
         modelValue: boolean;
@@ -117,6 +198,7 @@
     const profileLoading = ref(true);
     const leadershipLoading = ref(true);
     const error = ref<string | null>(null);
+    const filingsError = ref<string | null>(null);
 
     const ticker = ref('N/A');
     const companyCik = ref('N/A');
@@ -127,7 +209,24 @@
 
     const companyNeid = computed(() => props.companyNeid);
 
-    const { loading: filingsLoading, loadFilings } = useCompanyFilings(companyNeid);
+    const {
+        loading: filingsLoading,
+        data: filingsData,
+        loadFilings,
+    } = useCompanyFilings(companyNeid);
+
+    const filingsForBox = computed<FilingEntry[]>(() => {
+        const threeYearsAgo = new Date();
+        threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+
+        return filingsData.value.supportedFilings
+            .filter((f) => f.filingDate >= threeYearsAgo)
+            .map((f) => ({
+                neid: f.neid,
+                filingDate: f.filingDate,
+                formType: f.formType,
+            }));
+    });
 
     const {
         loading: financialFactsLoading,
@@ -255,3 +354,15 @@
         }
     });
 </script>
+
+<style scoped>
+    .leadership-table {
+        font-size: 0.8125rem;
+    }
+
+    .leadership-table th,
+    .leadership-table td {
+        padding: 6px 12px !important;
+        white-space: nowrap;
+    }
+</style>

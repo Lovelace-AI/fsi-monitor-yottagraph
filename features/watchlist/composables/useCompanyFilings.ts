@@ -3,6 +3,7 @@ import { useWatchlistApi } from './useWatchlistApi';
 export interface SupportedFiling {
     neid: string;
     filingDate: Date;
+    formType: string;
 }
 
 export interface CompanyFilingsData {
@@ -51,6 +52,7 @@ export function useCompanyFilings(companyNeid: Ref<string>) {
             const schema = await api.getSchema();
             const filingsPid = schema.properties.find((p) => p.name === 'filings')?.pid;
             const filingDatePid = schema.properties.find((p) => p.name === 'filing_date')?.pid;
+            const formTypePid = schema.properties.find((p) => p.name === 'form_type')?.pid;
 
             if (!filingsPid || !filingDatePid) {
                 throw new Error('Required schema properties not found');
@@ -79,13 +81,27 @@ export function useCompanyFilings(companyNeid: Ref<string>) {
             let lastSupportedFilingDate = 'N/A';
 
             if (validNeids.length > 0) {
-                const dateProperties = await api.getEntityProperties(validNeids, [filingDatePid]);
+                const pidsToFetch = formTypePid ? [filingDatePid, formTypePid] : [filingDatePid];
+                const docProperties = await api.getEntityProperties(validNeids, pidsToFetch);
 
-                for (const prop of dateProperties) {
+                const dateByNeid: Record<string, Date> = {};
+                const formTypeByNeid: Record<string, string> = {};
+
+                for (const prop of docProperties) {
                     if (prop.pid === filingDatePid && prop.value) {
+                        dateByNeid[prop.eid] = new Date(prop.value);
+                    }
+                    if (formTypePid && prop.pid === formTypePid && prop.value) {
+                        formTypeByNeid[prop.eid] = String(prop.value);
+                    }
+                }
+
+                for (const docNeid of validNeids) {
+                    if (dateByNeid[docNeid]) {
                         supportedFilings.push({
-                            neid: prop.eid,
-                            filingDate: new Date(prop.value),
+                            neid: docNeid,
+                            filingDate: dateByNeid[docNeid],
+                            formType: formTypeByNeid[docNeid] || 'Unknown',
                         });
                     }
                 }
