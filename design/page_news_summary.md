@@ -1,15 +1,49 @@
 # News Summary
 
-The page has a news summary at the top. Below, we display a sample of news items.
+Pop-up page from the Watchlist "Summary (24H)" column.
 
-## Summary
+## Purpose
 
-TODO, for now just put "Summary: work in progress"
+Provide a quick overview of recent news coverage with article details.
 
-## News articles
+## Data Source
 
-From News Mentions (`design/page_news_mentions.md`) we should have the NEIDS of all articles that the company appeared in from the past month along with a `recorded_at`, which is a stand in for the publication date of the article.
+Uses the **shared news query** from `design/page_news_mentions.md`, plus supplemental article detail queries.
 
-Take the most recent `recorded_at` articles from the past 24 hours, choosing a maximum of 20 articles. If there are no articles in the past 24 hours, just put "No news found for the past day".
+### From shared query (`/mentions/lookup/detail`)
 
-For each of these 20 articles, do an `/elemental/entities/properties` query for the properties `title` and `original_publication_name`. Also include `sentiment`, `url`, and `summary` which were attributes on the `appears_in` relationship that was queried in `design/page_news_mentions.md`. Create a small box for each article with all this information.
+- `publication_date`: Filter to past 24 hours, sort by recency
+- `artid`: Use to fetch article details
+- `sentiment`: Display per-article
+- `original_publication_name`: Display source
+- `snippet`: Fallback summary text
+
+### From article details (`/articles/{artid}`)
+
+For the 20 most recent articles from the past 24 hours:
+
+- `title`: Article headline
+- `summary`: Full article summary
+- `url`: Link to original article
+
+## UI
+
+### Summary Header
+
+Placeholder text: "Summary: work in progress"
+
+(Future: AI-generated summary of recent news themes)
+
+### Article List
+
+Display up to 20 articles from the past 24 hours. If none exist, show: "No news found for the past day."
+
+Each article card shows:
+
+| Field       | Source                                          |
+| ----------- | ----------------------------------------------- |
+| Title       | `/articles/{artid}`                             |
+| Publication | `original_publication_name` from mention detail |
+| Summary     | `/articles/{artid}` (fallback: `snippet`)       |
+| Sentiment   | `sentiment` from mention detail                 |
+| URL         | `/articles/{artid}`                             |

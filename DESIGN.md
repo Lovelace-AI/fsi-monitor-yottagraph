@@ -7,7 +7,7 @@ An app to explore information about companies, with a focus on data derived from
 **Created:** 2026-02-25  
 **App ID:** aether-dserp-fsi-mm2h  
 **Description:** A app for exploring DSERP-FSI data  
-**Last updated:** 2026-03-12
+**Last updated:** 2026-03-13
 
 ## Configuration
 
@@ -113,7 +113,11 @@ Use `/elemental/find` with a `linked` expression to find people linked to the co
 
 ### News data
 
-To get news mentions, use `/mentions/lookup` with the targeted time frame (previous 30 days). This will return a list of mcodes.
+News data is fetched via `/mentions/lookup/detail` with the targeted time frame (previous 30 days). This single query returns all mention details (publication date, sentiment, article IDs, publication names) needed for the three news pages: Mentions, Sentiment, and Summary.
+
+For the Summary page, additional article details (title, summary, URL) are fetched via `/articles/{artid}` for the 20 most recent articles.
+
+See `design/page_news_mentions.md` for the full query strategy and data flow diagram.
 
 ## Modules
 

@@ -1,15 +1,90 @@
 # News Mentions
 
-This is a pop up from the Watchlist under the News Mentions column.
+Pop-up page from the Watchlist "News Mentions" column.
 
-A count of the total news mentions for the entity in the last 30 days.
+## Purpose
 
-## News chart
+Show the volume of news coverage for a company over the past 30 days.
 
-A simple line chart showing the number of news mentions per day.
+## Data Source
 
-## Data access
+Uses the **shared news query** (see below). This page displays:
 
-The count of news mentions is accessed via the /elemental/find endpoint. We search for entities with the flavor `article` that have the property `appears_in` and the value is the NEID of the target company. Each `appears_in` should also have a `recorded_at` attribute, and we use that as the date of the article for all over processing. Count the number of articles that appear on each calendar date. Do NOT use a `eq` operator with this query. Instead use `linked`. Also query the `sentiment`, `url`, and `summary` attributes which will be used later.
+- **Total count**: Sum of all mentions in the time period
+- **Daily counts**: Group mentions by `publication_date` (truncated to calendar date)
 
-THIS QUERY SHOULD BE RUN ONCE AND REUSED FOR NEWS SENTIMENT AND NEWS SUMMARY.
+## UI
+
+### Header
+
+"News Mentions: {company name}" with total count badge.
+
+### Chart
+
+Line chart showing daily mention counts:
+
+- X-axis: Calendar dates (past 30 days)
+- Y-axis: Number of mentions
+- Hover: Shows exact count for that day
+
+---
+
+# Shared News Query
+
+**This section defines the single query used by all three news pages.** Run this query once when opening any news page, then reuse the cached results for the others.
+
+## Query: `/mentions/lookup/detail`
+
+```
+GET /mentions/lookup/detail
+  ?neid={company_neid}
+  &interval_start={30_days_ago_RFC3339}
+  &interval_end={now_RFC3339}
+```
+
+## Response Fields Used
+
+| Field                       | Used By             | Purpose                              |
+| --------------------------- | ------------------- | ------------------------------------ |
+| `publication_date`          | Mentions, Sentiment | Group by day, sort by recency        |
+| `sentiment`                 | Sentiment, Summary  | Daily averages, per-article display  |
+| `artid`                     | Summary             | Fetch article details                |
+| `original_publication_name` | Summary             | Display publication source           |
+| `snippet`                   | Summary             | Fallback if full summary unavailable |
+
+## Supplemental Query: Article Details (Summary page only)
+
+For the 20 most recent articles (past 24 hours), fetch additional details:
+
+```
+GET /articles/{artid}
+```
+
+This provides `title`, `summary`, and `url` which are not in the mention detail response.
+
+## Data Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    /mentions/lookup/detail                          │
+│         (30-day window, returns all mention details)                │
+└─────────────────────────────────────────────────────────────────────┘
+                                  │
+          ┌───────────────────────┼───────────────────────┐
+          ▼                       ▼                       ▼
+   ┌─────────────┐        ┌─────────────┐        ┌─────────────┐
+   │  Mentions   │        │  Sentiment  │        │   Summary   │
+   │    Page     │        │    Page     │        │    Page     │
+   ├─────────────┤        ├─────────────┤        ├─────────────┤
+   │ Count by    │        │ Average     │        │ Recent 20   │
+   │ pub_date    │        │ sentiment   │        │ articles    │
+   │             │        │ by day      │        │ + details   │
+   └─────────────┘        └─────────────┘        └─────────────┘
+                                                        │
+                                                        ▼
+                                               ┌─────────────┐
+                                               │ /articles/  │
+                                               │ {artid}     │
+                                               │ (batch x20) │
+                                               └─────────────┘
+```

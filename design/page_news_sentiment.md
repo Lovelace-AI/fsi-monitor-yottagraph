@@ -1,19 +1,38 @@
 # News Sentiment
 
-This is a pop up from the Watchlist under the News Sentiment column. See `DESIGN.md`.
+Pop-up page from the Watchlist "Sentiment" column.
 
-## Data aggregation
+## Purpose
 
-When running news mentions (see `design/page_news_mentions.md` we already got a list of all the articles per day over the last 30 days. We will reuse this query here.
+Show how sentiment toward the company has changed over time.
 
-Each of those articles has a sentiment score attached to the entity. For each day, we take a simple average of all the sentiment scores for the day, which becomes the daily sentiment score.
+## Data Source
 
-We also count up the number of occurences of each sentiment score for each day. The scores will be one of: `-1`, `-0.75`, `-0.5`, `0`, `0.5`, `0.75`, `1`.
+Uses the **shared news query** from `design/page_news_mentions.md`. This page uses:
 
-## Presentation
+- `publication_date`: Group mentions into calendar days
+- `sentiment`: The sentiment score for each mention (range: -1 to 1)
 
-Current sentiment score: (show the daily sentiment score for the most recent day with data. Color code is red, grey, or green based on value).
+## Aggregation Logic
 
-## Sentiment Chart
+For each calendar day with mentions:
 
-A line chart showing the daily sentiment score per day for the last 30 days. X-axis is days, and Y-axis ranges from -1 to 1. If a user hovers over any daily value on the graph, they can see a histogram of the distribution of scores for that day, in the buckets `-1`, `-0.75`, `-0.5`, `0`, `0.5`, `0.75`, `1`,
+1. **Daily average**: Simple mean of all `sentiment` values for that day
+2. **Distribution buckets**: Count occurrences in each bucket: `-1`, `-0.75`, `-0.5`, `0`, `0.5`, `0.75`, `1`
+
+## UI
+
+### Current Sentiment
+
+Display the daily average for the most recent day with data.
+
+- Color coding: Red (< -0.25), Grey (-0.25 to 0.25), Green (> 0.25)
+- Format: Show value with 2 decimal places
+
+### Sentiment Chart
+
+Line chart showing daily sentiment over time:
+
+- X-axis: Calendar dates (past 30 days)
+- Y-axis: Sentiment score (-1 to 1)
+- Hover interaction: When hovering over a data point, show a histogram of the sentiment distribution for that day using the buckets defined above
