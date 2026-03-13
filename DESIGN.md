@@ -166,12 +166,16 @@ See details on `design/page_cik_velocity.md`. The table just has the cik velocit
 
 An int value: the count of news mentions in the previous 30 days.
 
-A user can click to open a News Company Profile pop up page. For now, the page just says "Coming Soon".
+A user can click to open a News Company Profile pop up page. See details on `design/page_news_mentions.md`.
 
 #### Summary
 
-A placeholder value: "No summary". A user can click the score to open a News Summary pop up page. For now, the page just says "Coming Soon".
+A 6-8 word summary of news headlines from the past day. The visible text is truncated, but if a user hovers over it they can see the full summary.
+
+A user can click the score to open a News Summary pop up page. See details on `design/page_news_summary.md`.
 
 #### Sentiment
 
-A placeholder score: --. A user can click the score to open a News Sentiment pop up page. For now, the page just says "Coming Soon".
+The sentiment of the company on the most recent day with a sentiment score.
+
+A user can click to open a News Sentiment pop up page. See details on `design/page_news_sentiment.md`.
