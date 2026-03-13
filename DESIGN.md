@@ -156,11 +156,11 @@ A placeholder score: --. A user can click to open a Solvency Score pop up page. 
 
 #### Executive Risk
 
-A placeholder score: --. A user can click the score to open a Executive Risk pop up page. For details of the pop up, see `design/page_executive_risk.md`.
+See details on `design/page_executive_risk.md`. The table just has the executive risk score. A user can click the score to open a Executive Risk pop up page.
 
 #### CIK Velocity
 
-A placeholder score: --. A user can click the score to open a CIK Velocity pop up page. For now, the page just says "Coming Soon".
+See details on `design/page_cik_velocity.md`. The table just has the cik velocity score. A user can click the score to open a CIK Velocity pop up page.
 
 ##### News Mentions
 
