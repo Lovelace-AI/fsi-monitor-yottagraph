@@ -54,13 +54,17 @@ GET /mentions/lookup/detail
 
 ## Supplemental Query: Article Details (Summary page only)
 
-For the 20 most recent articles (past 24 hours), fetch additional details:
+For the 20 most recent articles (past 24 hours), fetch additional properties via `/elemental/entities/properties` using the `artid` as the entity NEID:
 
 ```
-GET /articles/{artid}
+POST /elemental/entities/properties
+{
+  "neids": [<artid1>, <artid2>, ...],
+  "pnames": ["title", "summary", "url"]
+}
 ```
 
-This provides `title`, `summary`, and `url` which are not in the mention detail response.
+This provides `title`, `summary`, and `url` which are not in the mention detail response. Use a single bulk call for all 20 articles.
 
 ## Data Flow
 
@@ -82,9 +86,10 @@ This provides `title`, `summary`, and `url` which are not in the mention detail 
    └─────────────┘        └─────────────┘        └─────────────┘
                                                         │
                                                         ▼
-                                               ┌─────────────┐
-                                               │ /articles/  │
-                                               │ {artid}     │
-                                               │ (batch x20) │
-                                               └─────────────┘
+                                               ┌───────────────────┐
+                                               │ /elemental/       │
+                                               │ entities/         │
+                                               │ properties        │
+                                               │ (bulk, 20 artids) │
+                                               └───────────────────┘
 ```

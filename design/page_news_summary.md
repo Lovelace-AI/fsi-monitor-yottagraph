@@ -18,9 +18,9 @@ Uses the **shared news query** from `design/page_news_mentions.md`, plus supplem
 - `original_publication_name`: Display source
 - `snippet`: Fallback summary text
 
-### From article details (`/articles/{artid}`)
+### From article properties (`/elemental/entities/properties`)
 
-For the 20 most recent articles from the past 24 hours:
+For the 20 most recent articles from the past 24 hours, query properties using `artid` as the entity NEID:
 
 - `title`: Article headline
 - `summary`: Full article summary
@@ -40,10 +40,10 @@ Display up to 20 articles from the past 24 hours. If none exist, show: "No news 
 
 Each article card shows:
 
-| Field       | Source                                          |
-| ----------- | ----------------------------------------------- |
-| Title       | `/articles/{artid}`                             |
-| Publication | `original_publication_name` from mention detail |
-| Summary     | `/articles/{artid}` (fallback: `snippet`)       |
-| Sentiment   | `sentiment` from mention detail                 |
-| URL         | `/articles/{artid}`                             |
+| Field       | Source                                                |
+| ----------- | ----------------------------------------------------- |
+| Title       | `title` property via `/elemental/entities/properties` |
+| Publication | `original_publication_name` from mention detail       |
+| Summary     | `summary` property (fallback: `snippet` from mention) |
+| Sentiment   | `sentiment` from mention detail                       |
+| URL         | `url` property via `/elemental/entities/properties`   |

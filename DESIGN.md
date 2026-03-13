@@ -115,7 +115,7 @@ Use `/elemental/find` with a `linked` expression to find people linked to the co
 
 News data is fetched via `/mentions/lookup/detail` with the targeted time frame (previous 30 days). This single query returns all mention details (publication date, sentiment, article IDs, publication names) needed for the three news pages: Mentions, Sentiment, and Summary.
 
-For the Summary page, additional article details (title, summary, URL) are fetched via `/articles/{artid}` for the 20 most recent articles.
+For the Summary page, additional article properties (title, summary, URL) are fetched via `/elemental/entities/properties` using the article IDs as NEIDs.
 
 See `design/page_news_mentions.md` for the full query strategy and data flow diagram.
 
