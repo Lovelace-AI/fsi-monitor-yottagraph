@@ -9,7 +9,7 @@ In addition to being displayed in the app, this table is stored in memory for fu
 
 ## Finding 8k events
 
-If the `form_type` of `document` is `8-K`, this is an 8-K form. These document should also have a property `filings`, which will return multiple `event` entities. Each of those `event`s should have a `form_8k_item_code` property.
+If the `form_type` of `document` is `8-K`, this is an 8-K form. These document should also have a property `filing_reference`, which will return multiple `event` entities. Each of those `event`s should have a `form_8k_item_code` property.
 
 ## Table
 

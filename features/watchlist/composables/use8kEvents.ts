@@ -124,7 +124,7 @@ export function use8kEvents(companyNeid: Ref<string>) {
 
             const schema = await api.getSchema();
             const formTypePid = schema.properties.find((p) => p.name === 'form_type')?.pid;
-            const filingsPid = schema.properties.find((p) => p.name === 'filings')?.pid;
+            const filingsPid = schema.properties.find((p) => p.name === 'filing_reference')?.pid;
             const filingDatePid = schema.properties.find((p) => p.name === 'filing_date')?.pid;
             const form8kItemCodePid = schema.properties.find(
                 (p) => p.name === 'form_8k_item_code'

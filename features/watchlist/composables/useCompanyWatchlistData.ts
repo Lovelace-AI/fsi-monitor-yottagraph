@@ -57,7 +57,7 @@ export function useCompanyWatchlistData() {
 
     async function fetchEdgarFilingsCount(neid: string): Promise<number> {
         const schema = await api.getSchema();
-        const filingsPid = schema.properties.find((p) => p.name === 'filings')?.pid;
+        const filingsPid = schema.properties.find((p) => p.name === 'filing_reference')?.pid;
         const filingDatePid = schema.properties.find((p) => p.name === 'filing_date')?.pid;
 
         if (!filingsPid || !filingDatePid) {

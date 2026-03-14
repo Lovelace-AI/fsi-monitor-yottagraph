@@ -53,14 +53,14 @@ Single value: These may occur multiple times, choose the instance with the most 
 
 Multiple values: These may occur multiple times, and we want to use all values.
 
-- filings
+- filing_reference
 - is_officer
 - is_director
 - all properties listed in Edgar Data section
 
 ### Edgar data
 
-The `filings` property on a company should typically return multiple results. The value of each one is the NEID of a `document` entity. (Known bug: sometimes the NEID will be "0", in which case we should ignore it.) We should make a single `properties` query for all the document NEIDs for the following properties. THIS SHOULD BE DONE AS A BULK CALL WHENEVER POSSIIBLE, OTHERWISE IT WILL BE VERY SLOW!
+The `filing_reference` property on a company should typically return multiple results. The value of each one is the NEID of a `document` entity. (Known bug: sometimes the NEID will be "0", in which case we should ignore it.) We should make a single `properties` query for all the document NEIDs for the following properties. THIS SHOULD BE DONE AS A BULK CALL WHENEVER POSSIIBLE, OTHERWISE IT WILL BE VERY SLOW!
 
 - filing_date
 - form_type
@@ -88,7 +88,7 @@ If a document has NO properties, it is Not Supported. Otherwise it is Supported.
 
 #### 8-K Events
 
-Documents with `form_type` = `8-K` are 8-K filings. These documents have a `filings` property that returns NEIDs of `event` entities. Each event entity has the following properties:
+Documents with `form_type` = `8-K` are 8-K filings. These documents have a `filing_reference` property that returns NEIDs of `event` entities. Each event entity has the following properties:
 
 - form_8k_item_code
 - form_8k_event

@@ -150,11 +150,11 @@ This section shows detailed events from the previous 30 days for context.
 
 ### Filing Activity
 
-| Metric          | Detection                                                 |
-| --------------- | --------------------------------------------------------- |
-| Filing Count    | Count of `filings` with `filing_date` in previous 30 days |
-| 8-K Count       | Subset where `form_type` = '8-K'                          |
-| Amendment Count | Forms ending in '/A'                                      |
+| Metric          | Detection                                                          |
+| --------------- | ------------------------------------------------------------------ |
+| Filing Count    | Count of `filing_reference` with `filing_date` in previous 30 days |
+| 8-K Count       | Subset where `form_type` = '8-K'                                   |
+| Amendment Count | Forms ending in '/A'                                               |
 
 A table of filings with columns:
 
