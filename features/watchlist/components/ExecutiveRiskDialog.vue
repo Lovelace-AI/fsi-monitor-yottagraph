@@ -1,9 +1,9 @@
 <template>
-    <v-dialog v-model="isOpen" max-width="700" scrollable>
+    <v-dialog v-model="isOpen" max-width="600" scrollable>
         <v-card>
             <v-card-title class="d-flex align-center">
                 <v-icon class="mr-2" size="small">mdi-account-alert</v-icon>
-                Executive Risk
+                Executive Risk: {{ companyName }}
                 <v-spacer />
                 <v-btn icon variant="text" size="small" @click="isOpen = false">
                     <v-icon>mdi-close</v-icon>
@@ -11,17 +11,6 @@
             </v-card-title>
             <v-divider />
             <v-card-text class="pa-4">
-                <!-- Overall Executive Risk Score -->
-                <v-card class="mb-4" variant="outlined">
-                    <v-card-text class="text-center py-4">
-                        <div class="text-caption text-medium-emphasis mb-1">
-                            EXECUTIVE RISK SCORE
-                        </div>
-                        <div class="text-h4 font-weight-bold text-medium-emphasis">--</div>
-                        <div class="text-caption text-medium-emphasis mt-1">0-100, capped</div>
-                    </v-card-text>
-                </v-card>
-
                 <!-- Signals Table -->
                 <v-card variant="outlined">
                     <v-card-title class="d-flex align-center pb-1">
@@ -35,7 +24,6 @@
                                 <tr>
                                     <th class="text-left">Signal</th>
                                     <th class="text-center">Count</th>
-                                    <th class="text-center">Score</th>
                                     <th class="text-center">Risk Level</th>
                                 </tr>
                             </thead>
@@ -43,7 +31,6 @@
                                 <tr v-for="signal in signals" :key="signal.name">
                                     <td class="text-left">{{ signal.name }}</td>
                                     <td class="text-center">{{ signal.count }}</td>
-                                    <td class="text-center">{{ signal.score }}</td>
                                     <td class="text-center">
                                         <v-chip
                                             :color="getRiskLevelColor(signal.riskLevel)"
@@ -70,7 +57,6 @@
     interface Signal {
         name: string;
         count: string;
-        score: string;
         riskLevel: string;
     }
 
@@ -90,12 +76,12 @@
     });
 
     const signals = ref<Signal[]>([
-        { name: 'Officer Count', count: '--', score: '--', riskLevel: 'low' },
-        { name: 'C-Suite Coverage', count: '--', score: '--', riskLevel: 'low' },
-        { name: 'Officer Departures', count: '--', score: '--', riskLevel: 'low' },
-        { name: 'Director Departures', count: '--', score: '--', riskLevel: 'low' },
-        { name: 'Cumulative Departures', count: '--', score: '--', riskLevel: 'low' },
-        { name: 'Auditor Changes', count: '--', score: '--', riskLevel: 'low' },
+        { name: 'Officer Count', count: '--', riskLevel: 'low' },
+        { name: 'C-Suite Coverage', count: '--', riskLevel: 'low' },
+        { name: 'Officer Departures', count: '--', riskLevel: 'low' },
+        { name: 'Director Departures', count: '--', riskLevel: 'low' },
+        { name: 'Cumulative Departures', count: '--', riskLevel: 'low' },
+        { name: 'Auditor Changes', count: '--', riskLevel: 'low' },
     ]);
 
     function getRiskLevelColor(level: string): string {

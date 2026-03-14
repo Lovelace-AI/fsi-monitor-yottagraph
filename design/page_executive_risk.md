@@ -33,8 +33,7 @@ Leadership data comes from the company profile Leadership section (see `DESIGN.m
 
 1. Signal
 2. Count (always a count for every signal)
-3. Score
-4. Risk Level
+3. Risk Level
 
 ## Signals
 
