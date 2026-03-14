@@ -30,7 +30,7 @@ In addition to being displayed in the app, this table is stored in memory for fu
 
 - **Row ordering**: Rows are sorted by `filing_date`, most recent first
 - **Date limit**: Only show filings from the previous 3 years
-- **Filing filter**: All form types are included
+- **Filing filter**: Only 10-K and 10-Q forms (including amendments like 10-K/A and 10-Q/A)
 - **Number formatting**: Use thousand separators and include units where relevant (e.g., `$1,234,567`)
 - **Computed values**: For fallbacks that combine multiple concepts (e.g., `AssetsCurrent + AssetsNoncurrent`), if any component is missing, skip this fallback entirely and try the next priority
 

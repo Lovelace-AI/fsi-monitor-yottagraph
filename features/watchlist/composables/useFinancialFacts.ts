@@ -279,11 +279,15 @@ export function useFinancialFacts(companyNeid: Ref<string>) {
                 return;
             }
 
-            // Filter to only filings within the 3-year window
+            // Filter to only 10-K and 10-Q filings within the 3-year window
             const threeYearsAgo = new Date();
             threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
 
-            const recentFilings = supportedFilings.filter((f) => f.filingDate >= threeYearsAgo);
+            const recentFilings = supportedFilings.filter((f) => {
+                if (f.filingDate < threeYearsAgo) return false;
+                const ft = f.formType.toUpperCase();
+                return ft.startsWith('10-K') || ft.startsWith('10-Q');
+            });
 
             if (recentFilings.length === 0) {
                 loading.value = false;

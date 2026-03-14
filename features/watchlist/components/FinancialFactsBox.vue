@@ -13,7 +13,7 @@
                 {{ error }}
             </div>
             <div v-else-if="rows.length === 0" class="pa-4 text-medium-emphasis">
-                No financial filings found in the last 3 years.
+                No 10-K or 10-Q filings found in the last 3 years.
             </div>
             <div v-else class="financial-facts-table-container">
                 <v-table density="compact" class="financial-facts-table">
@@ -109,8 +109,8 @@
                 v-if="!loading && !error && rows.length > 0"
                 class="text-caption text-medium-emphasis pa-2"
             >
-                Showing filings from the last 3 years. Hover over column headers to see data
-                sources.
+                Showing 10-K and 10-Q filings from the last 3 years. Hover over column headers to
+                see data sources.
             </div>
         </v-card-text>
     </v-card>
